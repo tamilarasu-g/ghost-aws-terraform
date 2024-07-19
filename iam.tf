@@ -35,8 +35,8 @@ resource "aws_iam_role" "create-volume-instance-role" {
   })
 
   inline_policy {
-    name   = "create-a-record-policy"
-    policy = file(var.a-record-policy-path)
+    name   = "create-volume-start-instance-policy"
+    policy = file(var.volume-start-instance-policy-path)
   }
 }
 
@@ -56,7 +56,7 @@ resource "aws_iam_role" "snap-and-delete-volume-role" {
   })
 
   inline_policy {
-    name   = "create-a-record-policy"
+    name   = "snap-and-delete-volume-policy"
     policy = file(var.snap-and-delete-volume-policy-path)
   }
 }

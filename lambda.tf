@@ -13,12 +13,21 @@ data "archive_file" "create-a-record-zip" {
   source_file = local_file.create-a-record-lambda.filename
 }
 
+resource "aws_lambda_layer_version" "requests_layer" {
+  filename   = "./python/requests_layer.zip"
+  layer_name = "requests_layer"
+
+  compatible_runtimes = ["python3.10"]
+}
+
 resource "aws_lambda_function" "create-a-record-lambda" {
   filename      = "${path.module}/python/create-a-record.zip"
   runtime       = "python3.10"
   function_name = "create-a-record"
   role          = aws_iam_role.a-record-role.arn
-  handler       = local_file.create-a-record-lambda.filename
+  handler       = "create-a-record.lambda_handler"
+  layers        = [aws_lambda_layer_version.requests_layer.arn]
+  timeout       = 10
   environment {
     variables = {
       NETLIFY_ACCESS_TOKEN = var.netlify_access_token
@@ -46,7 +55,8 @@ resource "aws_lambda_function" "snap-and-delete-lambda" {
   runtime       = "python3.10"
   function_name = "snap-and-delete-volume"
   role          = aws_iam_role.snap-and-delete-volume-role.arn
-  handler       = local_file.snap-and-delete-file.filename
+  handler       = "snap-and-delete-volume.lambda_handler"
+  timeout       = 10
 }
 
 resource "local_file" "create-volume-instance" {
@@ -69,8 +79,6 @@ resource "aws_lambda_function" "create-volume-instance-lambda" {
   runtime       = "python3.10"
   function_name = "create-volume-start-instance"
   role          = aws_iam_role.create-volume-instance-role.arn
-  handler       = local_file.create-volume-instance.filename
+  handler       = "create-volume-instance.lambda_handler"
+  timeout       = 10
 }
-
-
-
