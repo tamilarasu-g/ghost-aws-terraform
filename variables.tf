@@ -42,15 +42,17 @@ variable "snap-and-delete-volume-lambda-file" {
 }
 
 variable "root-device-name" {
-  description = "simple"
+  description = "root storage block name"
   default     = "/dev/sda1"
 }
 
 variable "ec2-ghost-start-rule-path" {
+  description = "The path which contains the rule for ec2-ghost-start"
   default = "./eventbridge-rules/ec2-ghost-start.json.tpl"
 }
 
 variable "ec2-ghost-stop-rule-path" {
+  description = "The path which contains the rule for ec2-ghost-stop"
   default = "./eventbridge-rules/ec2-ghost-stop.json.tpl"
 }
 
